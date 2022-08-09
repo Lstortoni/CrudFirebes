@@ -23,7 +23,7 @@ const LeerFotografos = () => {
         } catch (error) {
             console.log(error)
         }
-
+ 
       }
      obteberDatos()   //ejecuto la funcion de inmediato
 
