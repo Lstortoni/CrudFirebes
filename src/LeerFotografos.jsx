@@ -25,7 +25,7 @@ const LeerFotografos = () => {
         }
  
       }
-     obteberDatos()   //ejecuto la funcion de inmediato
+     obteberDatos()   //ejecuto la funcion de inmediato para ller
 
    }, [])
    
