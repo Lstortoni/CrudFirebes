@@ -28,7 +28,7 @@ const LeerFotografos = () => {
      obteberDatos()   //ejecuto la funcion de inmediato para leer los fotografos .
 
    }, [])
-    
+         
 
   return (
     <div className='container mt-3'>
