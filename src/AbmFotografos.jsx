@@ -2,54 +2,109 @@ import React from 'react'
 import { useState } from 'react'
 import {firebase} from './firebase'
 
-const AbmFotografos = () => {
+const AbmFotografos =() => {
 
     const[fotografos,setFotografos] = React.useState([])
     
    const[modeoEdicion,setModoedicion]= React.useState(false)
 
-   const[nombre,setNombre]= React.useState('')
+   const[apyn,setApyn]= React.useState('')
 
-   const[apellido,setApellido]= React.useState('')
 
    const[instagram,setInstagram]= React.useState('')
 
-   const[pagina,setPagina]= React.useState('')
+
 
    const[tipo,setTipo]= React.useState('')
 
 
-   const agregarFotografo =(e)=>{
-    console.log("Agrega")
-   }
-
-   const editarFotografo =(e)=>{
-       console.log("Edita")
-  }
-
    React.useEffect(() => {
 
-      const obteberDatos=async ()=>{
-       
-        try {
-            
-            const db = firebase.firestore()
-            const data = await db.collection('fotografos').get()
 
-            const arryFotografos = data.docs.map(doc=>({id:doc.id,...doc.data()}))
+    const obteberDatos=async ()=>{
+     
+      try {
+          
+        const db = firebase.firestore()
+         const data = await db.collection('fotografos').get()
+    
+        const arryFotografos = data.docs.map(doc=>({id:doc.id,...doc.data()}))
+    
+         setFotografos(arryFotografos)
 
-            setFotografos(arryFotografos)
-            console.log(arryFotografos) 
-
-        } catch (error) {
-            console.log(error)
-        }
- 
+      } catch (error) {
+          console.log(error)
       }
-     obteberDatos()   //ejecuto la funcion de inmediato para leer los fotografos .
 
-   }, [])
-         
+    }
+   obteberDatos()   //ejecuto la funcion de inmediato para leer los fotografos .
+
+ }, [])
+       
+
+   const agregarFotografo = async(e)=>{
+   
+    e.preventDefault()
+   
+    if( (!apyn.trim()) && (!instagram.trim()) && (!tipo.trim()) ){
+
+      console.log('Elemento vacio')
+  
+     //  SetMensaje('No se ha escrito niguna tarea...')
+      return    
+    }
+
+   
+    try {
+   
+      const db = firebase.firestore()
+
+      const NuevoFotografo ={apyn:apyn, instagram: instagram, tipodefotografo: tipo }
+
+      const data = await db.collection('fotografos').add(NuevoFotografo)
+      
+      setApyn('')
+      setInstagram('')
+      setTipo('')
+
+      //const data2 = await db.collection('fotografos').get()
+
+      ///const arryFotografos = data2.docs.map(doc=>({id:doc.id,...doc.data()}))
+
+     // setFotografos(arryFotografos)
+
+      setFotografos([...fotografos,{...NuevoFotografo,id:data.id}]) 
+       
+     // traerDatosBase()
+    
+
+      //console.log(arryFotografos)
+      }
+
+   
+    catch (error) {
+      console.log(error)
+    }
+   }
+
+   const editarFotografo =async(e)=>{
+       
+    try {
+      e.preventDefault()
+      console.log("Edita")
+
+    } 
+    catch (error) {
+      
+    }
+    
+    
+
+
+
+  }
+
+
 
   return (
     <div className='container mt-3'>
@@ -85,22 +140,18 @@ const AbmFotografos = () => {
         <h1 className='text-center'>Forumulario de edición</h1>
         <div className="row">
         
-              <div className="col-6">
-                  <input  type="text" className="form-control mb-2"  placeholder="Ingrese nombre" onChange={ (e)=>setNombre(e.target.value)}  value={nombre}  />
+              <div className="col-12">
+                  <input  type="text" className="form-control mb-2"  placeholder="Ingrese nombre y apellido" onChange={ (e)=>setApyn(e.target.value)}  value={apyn}  />
               </div>
 
-              <div className="col-6">
-                  <input  type="text" className="form-control mb-2"  placeholder="Ingrese apellido" onChange={ (e)=>setApellido(e.target.value)}  value={apellido}  />
-              </div>
+           
 
-              <div className="col-4">
+              <div className="col-6">
                  <input  type="text" className="form-control mb-2"  placeholder="Ingrese instagram" onChange={ (e)=>setInstagram(e.target.value)}  value={instagram}  />
               </div>
 
-              <div className="col-4">
-                 <input  type="text" className="form-control mb-2"  placeholder="Ingrese página web" onChange={ (e)=>setPagina(e.target.value)}  value={pagina}  />
-              </div>
-              <div className="col-4">
+             
+              <div className="col-6">
                  <input  type="text" className="form-control mb-2"  placeholder="Ingrese tipo de fotógrafo" onChange={ (e)=>setTipo(e.target.value)}  value={tipo}  />
               </div>
           
@@ -109,7 +160,7 @@ const AbmFotografos = () => {
                {
                                       //EN ESTE CASO NO SE DEVUELVE STRING, ENTONCES VA CON PARENTESIS 
 
-                  modeoEdicion? (<button className="btn btn-warning btn-block" type="submit">Editar Fotógrafo</button> ) : (<button className="btn btn-dark btn-block" type="submit">Agregar Tarea</button>)
+                  modeoEdicion? (<button className="btn btn-warning btn-block" type="submit">Editar Fotógrafo</button> ) : (<button className="btn btn-dark btn-block" type="submit">Agregar Fotógrafo</button>)
                }   
                               
             </div>  
