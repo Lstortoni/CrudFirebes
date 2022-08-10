@@ -1,11 +1,11 @@
 import React from "react";
-import LeerFotografos from "./LeerFotografos";
+import AbmFotografos from "./AbmFotografos";
 
 function App() {
   return (
     <div className="container">
       <h1>Crud Fotogrografos</h1>
-         <LeerFotografos/>
+         <AbmFotografos/>
     </div>
   );
 }
