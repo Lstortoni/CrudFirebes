@@ -20,7 +20,7 @@ const AbmFotografos =() => {
 
    React.useEffect(() => {
 
-
+//******************************************************************Obtiene los datos de la base de firebis******************************************************************************************** */
     const obteberDatos=async ()=>{
      
       try {
@@ -41,7 +41,7 @@ const AbmFotografos =() => {
 
  }, [])
        
-
+//**********************************************************Agrega un nuevo fotografo***************************************************************************************************** */
    const agregarFotografo = async(e)=>{
    
     e.preventDefault()
@@ -86,7 +86,7 @@ const AbmFotografos =() => {
       console.log(error)
     }
    }
-
+//******************************************************************Edita un fotografo****************************************************************************************** */
    const editarFotografo =async(e)=>{
        
     try {
@@ -97,12 +97,16 @@ const AbmFotografos =() => {
     catch (error) {
       
     }
-    
-    
-
-
 
   }
+//*********************************************************************Eliminar Fotografo************************************************************************************** */
+
+ const EliminarFotografo = ()=>{
+
+
+
+ }
+
 
 
 
@@ -126,7 +130,8 @@ const AbmFotografos =() => {
 
                       <li className="list-group-item" key={item.id}>
 
-                          Nombre: {item.apyn} - Instagram : {item.instagram} - Tipo de tofografia : {item.tipodefotografo}  
+                          Nombre: {item.apyn} - Instagram : {item.instagram} - Tipo de tofografia : {item.tipodefotografo} 
+                          <button className="btn btn-danger  btn-sm float-right mx-2" onClick={()=>EliminarFotografo(item.id)}>Eliminar</button> 
                       </li>
 
                       ))
