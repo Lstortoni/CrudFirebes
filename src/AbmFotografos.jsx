@@ -6,7 +6,7 @@ const AbmFotografos =() => {
 
     const[fotografos,setFotografos] = React.useState([])
     
-   const[modeoEdicion,setModoedicion]= React.useState(false)
+   const[modoEdicion,setModoedicion]= React.useState(false)
 
    const[apyn,setApyn]= React.useState('')
 
@@ -16,6 +16,9 @@ const AbmFotografos =() => {
 
 
    const[tipo,setTipo]= React.useState('')
+
+
+   const[idFotografo,setIdFotografo]= React.useState('')
 
 
    React.useEffect(() => {
@@ -42,7 +45,7 @@ const AbmFotografos =() => {
  }, [])
        
 //**********************************************************Agrega un nuevo fotografo***************************************************************************************************** */
-   const agregarFotografo = async(e)=>{
+   const AgregarFotografoSave = async(e)=>{
    
     e.preventDefault()
    
@@ -87,12 +90,43 @@ const AbmFotografos =() => {
     }
    }
 //******************************************************************Edita un fotografo****************************************************************************************** */
-   const editarFotografo =async(e)=>{
-       
-    try {
-      e.preventDefault()
-      console.log("Edita")
+   const EditarFotografo =(item)=>{
+        
+      setModoedicion(true) 
+      setApyn(item.apyn)
+      setInstagram(item.instagram)
+      setTipo(item.tipodefotografo)
+      setIdFotografo(item.id)
+      console.log('porque se dispara 1')
+  }
 
+  //******************************************************************Edita un fotografo****************************************************************************************** */
+  const EditarFotografoSave =async(e)=>{
+    
+    e.preventDefault()
+    try {
+      
+     const db = firebase.firestore()
+
+     const UpdateFotografo ={apyn:apyn, instagram: instagram, tipodefotografo: tipo }
+
+      let id = idFotografo
+
+     await db.collection('fotografos').doc(id).update(UpdateFotografo)
+      
+      
+   
+
+     const  arrayEditado = fotografos.map(item=> item.id===id ? {id:id, apyn:apyn,instagram:instagram,tipodefotografo:tipo} : item)
+
+
+     setFotografos(arrayEditado) 
+
+     
+     setIdFotografo('')
+
+     setModoedicion(false)
+    console.log('porque se dispara 2')
     } 
     catch (error) {
       
@@ -101,18 +135,46 @@ const AbmFotografos =() => {
   }
 //*********************************************************************Eliminar Fotografo************************************************************************************** */
 
- const EliminarFotografo = ()=>{
+ const EliminarFotografo =async (id)=>{
+ 
+    let arrayFiltrado = [];
+    arrayFiltrado= fotografos.filter(item=> item.id!==id)
+
+    setFotografos(arrayFiltrado) 
+
+
+
+    try {
+   
+      const db = firebase.firestore()
+
+      
+
+      await db.collection('fotografos').doc(id).delete()
+      
+      
+      const arrayFiltrado= fotografos.filter(item=> item.id!==id)
+
+      setFotografos(arrayFiltrado) 
+
+      }
+
+   
+    catch (error) {
+      console.log(error)
+    }
+
 
 
 
  }
 
-
+//*********************************************************************************************************************************************************************************** */
 
 
   return (
     <div className='container mt-3'>
-       <form onSubmit={(e)=> modeoEdicion? editarFotografo(e):agregarFotografo(e)}> 
+     
        <h1 className='text-center'>Listado de fotografos</h1>
          <div className="row">
             <div className="col-12">
@@ -132,6 +194,8 @@ const AbmFotografos =() => {
 
                           Nombre: {item.apyn} - Instagram : {item.instagram} - Tipo de tofografia : {item.tipodefotografo} 
                           <button className="btn btn-danger  btn-sm float-right mx-2" onClick={()=>EliminarFotografo(item.id)}>Eliminar</button> 
+
+                          <button className="btn btn-warning  btn-sm float-right mx-2" onClick={()=>EditarFotografo(item)}>Editar</button> 
                       </li>
 
                       ))
@@ -142,7 +206,20 @@ const AbmFotografos =() => {
 
             </div>
         </div>
-        <h1 className='text-center'>Forumulario de edición</h1>
+      
+        <hr>
+        </hr>
+        <h4 className="text-center">
+                    {
+
+                        modoEdicion ? 'Editar formulario' : 'Agregar formulario' 
+                    }
+                    
+                    
+                
+                
+                </h4>
+        <form onSubmit={(e)=> modoEdicion? EditarFotografoSave(e):AgregarFotografoSave(e)}> 
         <div className="row">
         
               <div className="col-12">
@@ -165,7 +242,7 @@ const AbmFotografos =() => {
                {
                                       //EN ESTE CASO NO SE DEVUELVE STRING, ENTONCES VA CON PARENTESIS 
 
-                  modeoEdicion? (<button className="btn btn-warning btn-block" type="submit">Editar Fotógrafo</button> ) : (<button className="btn btn-dark btn-block" type="submit">Agregar Fotógrafo</button>)
+                  modoEdicion? (<button className="btn btn-warning btn-block" type="submit">Editar Fotógrafo</button> ) : (<button className="btn btn-dark btn-block" type="submit">Agregar Fotógrafo</button>)
                }   
                               
             </div>  
